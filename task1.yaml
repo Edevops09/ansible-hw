@@ -44,7 +44,7 @@
     - katy
      
   # Download the address.csv file to user home directory. 
-  # Used /etc/skel directory. Can be done manually for each user or using with_items     
+  # Used /etc/skel directory.     
   - name: Download url in user home directory
     get_url:
       url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv

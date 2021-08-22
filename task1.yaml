@@ -7,8 +7,7 @@
     ansible.builtin.debug:
       var: ansible_facts['distribution']
    
-  
-  # Install Mariadb-server on Amazon
+   # Install Mariadb-server on Amazon
   - name: Install webserver Amazon
     when: 
     - ansible_facts['distribution'] == "Amazon"  
@@ -33,7 +32,6 @@
     notify: Restart webserver Ubuntu
     
   # Creating users on Amazon and Ubuntu. 
-  # with_items and using list caused issues so simplified code
   - name: Create user accounts
     ansible.builtin.user:
       name: "{{ item }}"
@@ -45,8 +43,6 @@
     - ben
     - katy
      
-
-
   # Download the address.csv file to user home directory. 
   # Used /etc/skel directory. Can be done manually for each user or using with_items     
   - name: Download url in user home directory
@@ -54,7 +50,6 @@
       url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
       dest: /etc/skel
       mode: '0644'  
-  
   
   handlers:
   - name: Restart webserver Ubuntu

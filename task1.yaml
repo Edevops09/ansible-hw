@@ -16,13 +16,6 @@
       name: mariadb-server
       state: present
     
-  # Updated the apt-get database
-  - name: Update apt-database  
-    when: 
-    - ansible_facts['distribution'] == "Ubuntu" 
-    apt:
-      update_cache: yes
-  
   # Install Mariadb-server on Ubuntu 
   - name: Install webserver Ubuntu
     when: 
@@ -32,31 +25,26 @@
       state: present
     notify: Restart webserver Ubuntu
   
+  # Updated the apt-get database
+  - name: Update apt-database  
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    apt:
+      update_cache: yes
+
   # Creating users on Amazon and Ubuntu. 
   # with_items and using list caused issues so simplified code
   - name: Create bob account
     ansible.builtin.user:
-      name: bob
+      name: "{{ item }}"
       state: present
       generate_ssh_key: yes
-
-  - name: Create lisa accounts
-    ansible.builtin.user:
-      name: lisa
-      state: present
-      generate_ssh_key: yes
-
-  - name: Create ben accounts
-    ansible.builtin.user:
-      name: ben
-      state: present
-      generate_ssh_key: yes
-
-  - name: Create katy accounts
-    ansible.builtin.user:
-      name: katy
-      state: present
-      generate_ssh_key: yes      
+    with_items:
+    - bob
+    - lisa
+    - ben
+    - katy
+     
 
 
   # Download the address.csv file to user home directory. 

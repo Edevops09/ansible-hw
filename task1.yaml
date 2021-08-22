@@ -16,6 +16,13 @@
       name: mariadb-server
       state: present
     
+  # Updated the apt-get database
+  - name: Update apt-database  
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    apt:
+      update_cache: yes
+  
   # Install Mariadb-server on Ubuntu 
   - name: Install webserver Ubuntu
     when: 
@@ -24,17 +31,10 @@
       name: mariadb-server
       state: present
     notify: Restart webserver Ubuntu
-  
-  # Updated the apt-get database
-  - name: Update apt-database  
-    when: 
-    - ansible_facts['distribution'] == "Ubuntu" 
-    apt:
-      update_cache: yes
-
+    
   # Creating users on Amazon and Ubuntu. 
   # with_items and using list caused issues so simplified code
-  - name: Create bob account
+  - name: Create user accounts
     ansible.builtin.user:
       name: "{{ item }}"
       state: present

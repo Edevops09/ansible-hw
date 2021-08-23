@@ -1,0 +1,18 @@
+---
+# Ansible gathers facts about all the managed hosts
+# Debug module prints all the information and facts about hosts
+- name: Show facts 
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+    # - name: print facts
+    #   ansible.builtin.debug:        
+    #     var: ansible_facts
+    - name : Get ipv4 address of hosts
+      ansible.builtin.debug:
+        msg: >
+          The Public hosts IP address are {{ ansible_facts.default_ipv4.address }}
+      
+...
+    

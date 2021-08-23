@@ -1,0 +1,21 @@
+- name: Install httpd
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Information
+    ansible.builtin.debug:
+      var: ansible_facts['distribution']
+  - name: Install httpd
+    package:
+      name: httpd
+      state: present
+  - name: Create an index.html file
+    copy:
+      content: 'Welcome to the websever'
+      dest: /var/www/html/index.html
+  - name: Enable httpd
+    service:
+      name: httpd
+      state: started
+      enabled: true

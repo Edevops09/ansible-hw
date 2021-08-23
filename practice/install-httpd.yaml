@@ -1,0 +1,66 @@
+---
+- name: Install httpd
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Information
+    ansible.builtin.debug:
+      var: ansible_facts['distribution']
+  - name: Install httpd
+    when: 
+    - ansible_facts['distribution'] == "Amazon"
+    ansible.builtin.package:
+      name: httpd
+      state: present
+  
+  - name: Create an index.html file
+    when: 
+    - ansible_facts['distribution'] == "Amazon"
+    copy: 
+      content: 'Welcome to this test server'
+      dest: /var/www/html/index.html
+  - name: Enable httpd 
+    when: 
+    - ansible_facts['distribution'] == "Amazon"
+    ansible.builtin.systemd:
+      name: httpd
+      state: started
+      enabled: true
+  # - name: Open firewalld web port http
+  #   when: 
+  #   - ansible_facts['distribution'] == "Amazon"
+  #   ansible.builtin.firewalld:
+  #     service: http
+  #     permanent: yes
+  #     state: enabled
+  # - name: Restart the firewalld service to load in the firewall changes
+  #   when:
+  #   - ansible_facts['distribution'] == "Amazon"
+  #   service: 
+  #     name: firewalld 
+  #     state: restarted
+
+  - name: Install apache2 on Ubuntu
+    when:
+    - ansible_facts['distribution'] == "Ubuntu"
+    ansible.builtin.package:
+      name: apache2
+      state: present
+  - name: Enable apache2 on Ubuntu    
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    ansible.builtin.systemd:
+      name: apache2
+      state: started
+      enabled: true
+  - name: Open Firewall http port on Ubuntu
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    ansible.builtin.ufw:
+      state: enabled 
+      rule: allow
+      port: 80
+
+
+...

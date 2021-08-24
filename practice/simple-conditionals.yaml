@@ -1,0 +1,13 @@
+---
+- name: Simple conditional playbook
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Download packages based on when condition
+    package: 
+      name: httpd
+      state: installed
+    when:
+      - ansible_distribution == 'RedHat'
+      

@@ -1,0 +1,13 @@
+---
+- name: Advance users add loop
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Add users with loop
+    user:
+      name: "{{ item.name}}"
+      groups: "{{ item.groups }}"
+    with_items:
+      - { name: 'linda', groups: 'wheel'}
+      - { name: 'anna', groups: 'wheel'}

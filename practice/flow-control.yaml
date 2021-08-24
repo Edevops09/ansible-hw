@@ -1,0 +1,12 @@
+- name: Simple flow control
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+  - name: Create a simple loop for packages
+    package:
+      name: '{{ item }}'
+      state: latest
+    with_items:
+      - httpd
+      - telnet

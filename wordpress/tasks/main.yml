@@ -1,0 +1,69 @@
+---
+# tasks file for wordpress
+- name: Install required main files
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - httpd
+  - php-{{ php_version }}
+  - php-mysql-{{ php_version }}
+  - telnet
+  notify: Start webserver
+
+
+- name: Get wordpress url to download
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  get_url:
+    url: https://wordpress.org/wordpress-{{ wordpress_version }}.tar.gz
+    dest: /tmp/wordpress-{{ wordpress_version }}.tar.gz
+    mode: '0440'
+
+
+- name: Unzip Wordpress file
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  unarchive:
+    src: /tmp/wordpress-{{ wordpress_version }}.tar.gz
+    dest: /var/www/html/
+    remote_src: true
+
+
+- name: Move wordpress file
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  shell: "cp -r  /var/www/html/wordpress/*   /var/www/html || exit 0"
+  ignore_errors: true
+
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: testfile
+    dest: /etc/testfile.conf
+    mode: '0644'
+
+
+- name: Create users and group
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  ansible.builtin.user:
+  - name: Create user accounts
+    ansible.builtin.user:
+      name: "{{ item }}"
+      groups: "{{ group_name }}"
+      state: present
+      generate_ssh_key: yes
+    with_items:
+    - bob
+    - lisa
+    - ben
+    - katy
+    - anna
+     

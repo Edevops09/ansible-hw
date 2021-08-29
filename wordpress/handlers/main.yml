@@ -1,0 +1,13 @@
+---
+# handlers file for wordpress
+- name: Start webserver
+  when: 
+  - ansible_facts['distribution'] == "Ubuntu" 
+  - ansible_facts['distribution_version'] == "16.04"
+  systemd: 
+    name: "{{ item }}" 
+    state: restarted
+    enabled: true
+  with_items:
+  - httpd
+  - telnet 

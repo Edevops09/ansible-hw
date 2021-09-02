@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Installs Wordpress on Ubuntu and creates 5 users with admin privilege.
+A brief description of the role goes here.
 
 Requirements
 ------------
@@ -21,18 +21,15 @@ A list of other roles hosted on Galaxy should go here, plus any details in regar
 Example Playbook
 ----------------
 
-
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - name: Installs Wordpress
-      hosts: all
-      become: true
-      become_method: sudo
+    - hosts: servers
       roles:
-         - wordpress
+         - { role: username.rolename, x: 42 }
 
 License
 -------
+
 BSD
 
 Author Information

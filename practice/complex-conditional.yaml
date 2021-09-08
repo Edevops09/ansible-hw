@@ -12,7 +12,7 @@
       ( ansible_distribution == 'RedHat' and
         ansible_memfree_mb > 512 )
       or
-      ( ansible_distribution == 'CentOS')
+      ( ansible_distribution == 'Ubuntu')
       
 ...  
       

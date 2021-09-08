@@ -1,0 +1,61 @@
+- name: Task1 playbook
+  hosts: all
+  become: true
+  become_method: sudo 
+  tasks:
+  - name: Information
+    ansible.builtin.debug:
+      var: ansible_facts['distribution']
+   
+   # Install Mariadb-server on Amazon
+  - name: Install webserver Amazon
+    when: 
+    - ansible_facts['distribution'] == "Amazon"  
+    ansible.builtin.package:
+      name: mariadb-server
+      state: present
+    
+  # Updated the apt-get database
+  - name: Update apt-database  
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    apt:
+      update_cache: yes
+  
+  # Install Mariadb-server on Ubuntu 
+  - name: Install webserver Ubuntu
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu" 
+    ansible.builtin.package:
+      name: mariadb-server
+      state: present
+    notify: Restart webserver Ubuntu
+    
+  # Creating users on Amazon and Ubuntu. 
+  - name: Create user accounts
+    ansible.builtin.user:
+      name: "{{ item }}"
+      state: present
+      generate_ssh_key: yes
+    with_items:
+    - bob
+    - lisa
+    - ben
+    - katy
+     
+  # Download the address.csv file to user home directory. 
+  # Used /etc/skel directory.     
+  - name: Download url in user home directory
+    get_url:
+      url: https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv
+      dest: /etc/skel
+      mode: '0644'  
+  
+  handlers:
+  - name: Restart webserver Ubuntu
+    when: 
+    - ansible_facts['distribution'] == "Ubuntu"
+    systemd:
+      name: mariadb-server
+      state: restarted  
+
